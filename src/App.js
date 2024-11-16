@@ -4,7 +4,6 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DoCard from './components/DoCard';
 
-
 function App() {
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
@@ -51,8 +50,6 @@ function App() {
         duration: 1,
       });
   });
-
-
   return (
     <div>
       <div

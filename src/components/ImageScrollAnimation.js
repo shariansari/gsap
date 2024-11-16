@@ -28,9 +28,7 @@ const ImageScrollAnimation = ({ image1, image2, image3, iamge4, imgae5, image6 }
         image2Ref.current.src = image3;
         image2Ref.current.src = iamge4;
         image2Ref.current.src = imgae5;
-        image2Ref.current.src = image6;
-
-
+        image2Ref.current.src = image6
         const drawImage = (progress) => {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.globalAlpha = 1 - progress;
