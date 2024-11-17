@@ -5,6 +5,12 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DoCard from './components/DoCard';
 
 function App() {
+  const wordsRef = useRef(null);
+  const words = document.querySelectorAll('.animate-word span');
+  const circleRef = useRef(null);
+  const textRef = useRef(null);
+
+
   useGSAP(() => {
     gsap.registerPlugin(ScrollTrigger);
     const tl = gsap.timeline();
@@ -26,29 +32,48 @@ function App() {
         trigger: ".page2",
         scroller: "body",
         start: "top 80%",
+        scrub: true,
       },
     });
     section2Timeline.from(".section2", {
-        y: 500,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.2,
-      })
-      section2Timeline.from(".arrow", {
-        y: -100,
-        opacity: 0,
-        duration: 1,
-      }); 
-      section2Timeline.from(".wedo", {
-        scale:0,
-        opacity: 0,
-        duration: 1,
-      });
-      section2Timeline.from(".docard", {
-        y: 200,
-        opacity: 0,
-        duration: 1,
-      });
+      y: 500,
+      opacity: 0,
+      duration: 1,
+      stagger: 0.2,
+    })
+    section2Timeline.from(".arrow", {
+      y: -100,
+      opacity: 0,
+      duration: 1,
+    });
+    section2Timeline.from(".wedo", {
+      scale: 0,
+      opacity: 0,
+      duration: 1,
+    });
+    section2Timeline.from(".docard", {
+      y: 200,
+      opacity: 0,
+      duration: 1,
+    });
+   
+      const words = wordsRef.current.querySelectorAll('span');
+      gsap.fromTo(
+        words,
+        { color: '#333333' },
+        {
+          color: "white",
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: wordsRef.current,
+            start: 'top center',
+            end: 'bottom center',
+            scrub: true,
+          },
+        }
+      );
+ 
+
   });
   return (
     <div>
@@ -116,6 +141,49 @@ function App() {
               <DoCard text={'customer intelligence'} />
             </div>
           </div>
+        </div>
+      </section>
+      <section className='bg-black py-20 pl-60' >
+        <div className='w-[65%]' ref={wordsRef}>
+          <div className='text-white font-bold text-3xl'>
+            NOT EVERYONE MAKES IT IN.
+          </div>
+          <div
+            className="text-white mt-10 text-6xl leading-relaxed lowercase animate-word"
+          >
+            <span>A</span> <span>sentence</span> <span>group</span> <span>of</span>
+            <span>words</span> <span>and</span> <span>a</span> <span>verb</span><span>,</span>
+            <span>that</span> <span>expresses</span> <span>a</span>
+            <span>statement</span><span>,</span> <span>a</span> <span>question</span>
+            <span>A</span> <span>sentence</span> <span>group</span> <span>of</span>
+            <span>words</span> <span>and</span> <span>a</span> <span>verb</span><span>,</span>
+            <span>that</span> <span>expresses</span> <span>a</span>
+            <span>statement</span><span>,</span><span>a</span> <span>question</span>
+            <span>A</span> <span>sentence</span> <span>group</span> <span>of</span>
+            <span>words</span> <span>and</span> <span>a</span> <span>verb</span><span>,</span>
+            <span>that</span> <span>expresses</span> <span>a</span>
+            <span>statement</span><span>,</span> <span>a</span> <span>question</span>
+            <span>etc</span><span>.</span>
+          </div>
+        </div>
+      </section>
+      <div className='h-[1px] bg-white w-full'></div>
+      <section className='bg-black py-40 px-32'>
+        <div className='flex flex-col items-center justify-center'>
+          <img src='https://web-images.credcdn.in/v2/_next/assets/images/landing/datasafe.png' className='h-20' />
+          <div className='text-white mt-5 text-4xl uppercase'>In linguistics and grammar, a sentence is.</div>
+          {/* <div className='text-white mt-10 text-center text-5xl leading-relaxed lowercase '>
+            A sentence group of words  and a verb, that expresses a statement, a question, etc. When a sentence is written it begins with a big (capital) letter and ends with a full stop.
+          </div> */}
+           <div className="text-white mt-10 text-center text-5xl leading-relaxed lowercase" ref={textRef}>
+          {Array.from("A sentence group of words and a verb, that expresses a statement, a question, etc.").map(
+            (char, index) => (
+              <span key={index} style={{ display: "inline-block" }}>
+                {char === " " ? "\u00A0" : char}
+              </span>
+            )
+          )}
+        </div>
         </div>
       </section>
     </div>
