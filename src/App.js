@@ -5,10 +5,14 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import DoCard from './components/DoCard';
 
 function App() {
-  const wordsRef = useRef(null);
-  const words = document.querySelectorAll('.animate-word span');
-  const circleRef = useRef(null);
-  const textRef = useRef(null);
+  const wordsRef = useRef();
+  const textRef = useRef();
+  const pathRef = useRef(null);
+  const svgRef = useRef(null);
+
+  const windowWidth = window.innerWidth;
+
+  
 
 
   useGSAP(() => {
@@ -56,6 +60,18 @@ function App() {
       opacity: 0,
       duration: 1,
     });
+
+    section2Timeline.to(".exp", {
+      transform :'translateX(-150%)',
+      scrollTrigger :{
+        trigger :'.expsec',
+        scroller :'body',
+        start :'top 0%',
+        end :'top -180%',
+        scrub:2,
+        pin:true,
+      }
+    });
    
       const words = wordsRef.current.querySelectorAll('span');
       gsap.fromTo(
@@ -71,28 +87,50 @@ function App() {
             scrub: true,
           },
         }
-      );
- 
-
+      )
   });
+  const onMouseMove = (event) => {
+    const { clientX, clientY } = event;
+    const boundingRect = svgRef.current.getBoundingClientRect();
+    const relativeY = clientY - boundingRect.top;
+
+    const newPath = `M 10 100 Q ${windowWidth/2} ${relativeY} ${windowWidth} 100`;
+
+    gsap.to(pathRef.current, {
+      attr: { d: newPath },
+      duration: 0.3,
+      ease: 'power3.out',
+    });
+  };
+
+  const handleMouseLeave = () => {
+    gsap.to(pathRef.current, {
+      attr: { d: `M 10 100 Q ${windowWidth/2} 100 ${windowWidth} 100` },
+      duration: 0.5,
+      ease: 'elastic.out(1, 0.3)',
+    });
+  };
+
+  
   return (
     <div>
       <div
         style={{ backgroundImage: 'url(https://assets.nicepagecdn.com/d2cc3eaa/1966444/images/6654e6-min.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', height: '100vh' }} >
-        <header className="rounded-full shadow border " style={{ position: 'fixed', top: '15px', left: '50%', transform: 'translateX(-50%)', width: '95vw', backdropFilter: 'blur(10px)' }} >
-          <div className="grid grid-cols-2 items-center p-1">
-            <div className="px-8">
-              <div style={{ fontFamily: 'cursive' }} className='text-white text-2xl font-medium  shariq'>Mohd Shariq Ansari</div>
+        <header className="rounded-full shadow border " style={{ position: 'fixed', top: '15px', left: '50%', transform: 'translateX(-50%)', width: '95vw', backdropFilter: 'blur(10px)' }}>
+          <div className='flex items-center justify-between p-1'>
+            <div className='px-8'>
+            <div style={{ fontFamily: 'cursive' }} className='text-white text-2xl font-medium ' >Mohd Shariq Ansari</div>
             </div>
-            <div className="flex justify-end items-center">
-              <div className="mr-20 text-white headeranimate">Home</div>
-              <div className="mr-20 text-white headeranimate">About</div>
-              <div className="mr-20 text-white headeranimate">Services</div>
-              <div className="px-8 py-3 rounded-full text-white headeranimate" style={{ background: '#70a2e1' }} >
+            <div className='flex items-center gap-10'>
+            <div className="text-white headeranimate">Home</div>
+            <div className="text-white headeranimate">About</div>
+            <div className="text-white headeranimate">Services</div>
+            <div className="px-8 py-3 rounded-full text-white headeranimate border hover:bg-white hover:text-black"  >
                 Apply now
               </div>
             </div>
           </div>
+
         </header>
         <section className='px-32 pt-48 text-white w-[58%]'>
           <div className='text-7xl font-extrabold bannerainamte'> We Innovate,</div>
@@ -166,26 +204,29 @@ function App() {
             <span>etc</span><span>.</span>
           </div>
         </div>
+       
       </section>
-      <div className='h-[1px] bg-white w-full'></div>
-      <section className='bg-black py-40 px-32'>
-        <div className='flex flex-col items-center justify-center'>
-          <img src='https://web-images.credcdn.in/v2/_next/assets/images/landing/datasafe.png' className='h-20' />
-          <div className='text-white mt-5 text-4xl uppercase'>In linguistics and grammar, a sentence is.</div>
-          {/* <div className='text-white mt-10 text-center text-5xl leading-relaxed lowercase '>
-            A sentence group of words  and a verb, that expresses a statement, a question, etc. When a sentence is written it begins with a big (capital) letter and ends with a full stop.
-          </div> */}
-           <div className="text-white mt-10 text-center text-5xl leading-relaxed lowercase" ref={textRef}>
-          {Array.from("A sentence group of words and a verb, that expresses a statement, a question, etc.").map(
-            (char, index) => (
-              <span key={index} style={{ display: "inline-block" }}>
-                {char === " " ? "\u00A0" : char}
-              </span>
-            )
-          )}
-        </div>
-        </div>
-      </section>
+      <div className='bg-black'  onMouseMove={onMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        width: '100%',
+        height: '200px',
+        overflow: 'hidden',
+      }}
+    >
+      <svg ref={svgRef} width="100vw" height="400">
+        <path
+          ref={pathRef}
+          d={`M 10 100 Q 250 100 ${windowWidth} 100`}
+          stroke="white"
+          fill="transparent"
+           stroke-width="2"
+        />
+      </svg>
+      </div>
+      <div className='expsec bg-black'>
+        <div className='exp text-white' style={{fontSize:'40vw'}}>EXPERIENCES</div>
+      </div>
     </div>
   );
 }
